@@ -57,10 +57,10 @@ static Sc3VmThread*
 static Sc3VmThread* NextFreeThreadCtx;  // Next free thread context in the
                                         // thread pool
 
-static InstructionProc* OpcodeTableSystem;
-static InstructionProc* OpcodeTableUser1;
-static InstructionProc* OpcodeTableGraph;
-static InstructionProc* OpcodeTableGraph3D;
+static InstructionProc* OpcodeTableSystem = nullptr;
+static InstructionProc* OpcodeTableUser1 = nullptr;
+static InstructionProc* OpcodeTableGraph = nullptr;
+static InstructionProc* OpcodeTableGraph3D = nullptr;
 
 static void CreateThreadExecTable();
 static void SortThreadExecTable();
@@ -462,15 +462,29 @@ void RunThread(Sc3VmThread* thread) {
              "Address: %016X Opcode: %02X:%02X ScriptBuffer: %i\n", thread->Ip,
              opcodeGrp1, opcode, thread->ScriptBufferId);
 
+      // Not all games support all opcode tables, therefore the nullptr checks
       if (opcodeGrp1 == 0x10) {
+        if (OpcodeTableUser1 == nullptr) {
+          goto unknown_opcode;
+        }
         OpcodeTableUser1[opcode](thread);
       } else if (opcodeGrp1 == 0x02) {
+        if (OpcodeTableGraph3D == nullptr) {
+          goto unknown_opcode;
+        }
         OpcodeTableGraph3D[opcode](thread);
       } else if (opcodeGrp1 == 0x01) {
+        if (OpcodeTableGraph == nullptr) {
+          goto unknown_opcode;
+        }
         OpcodeTableGraph[opcode](thread);
       } else if (!opcodeGrp1) {
+        if (OpcodeTableSystem == nullptr) {
+          goto unknown_opcode;
+        }
         OpcodeTableSystem[opcode](thread);
       } else {
+      unknown_opcode:
         ImpLog(LL_Error, LC_VM,
                "Thread CRASH! Unknown opcode. Attempting recovery. Address: "
                "%016X Opcode: %02X:%02X ScriptBuffer: %i\n",
