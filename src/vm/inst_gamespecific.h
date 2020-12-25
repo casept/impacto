@@ -32,6 +32,7 @@ VmInstruction(InstDelusionTriggerCHLCC);
 VmInstruction(InstUnk103A);
 VmInstruction(InstUnk103CMO8);
 VmInstruction(InstUnk103DMO8);
+VmInstruction(InstUnk103FSteinsGate);
 
 }  // namespace Vm
 

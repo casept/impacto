@@ -769,6 +769,18 @@ VmInstruction(InstUnk103A) {
     } break;
   }
 }
+VmInstruction(InstUnk103FSteinsGate) {
+  StartInstruction;
+  PopUint8(type);
+  switch (type) {
+    // TODO: Cases 0x00 to 0x1A
+    default: {
+          ImpLogSlow(LL_Warning, LC_VMStub, "STUB instruction Unk103FSteinsGate(type: %i)\n",
+                 type);
+      break;
+    }
+  }
+}
 
 VmInstruction(InstUnk103CMO8) {
   StartInstruction;
