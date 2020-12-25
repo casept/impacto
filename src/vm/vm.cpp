@@ -16,6 +16,7 @@
 #include "opcodetables_mo7.h"
 #include "opcodetables_dash.h"
 #include "opcodetables_cc.h"
+#include "opcodetables_sg.h"
 #include "../profile/game.h"
 #include "../profile/vm.h"
 #include "../profile/scriptinput.h"
@@ -116,6 +117,12 @@ void Init() {
       OpcodeTableSystem = OpcodeTableSystem_CC;
       OpcodeTableGraph = OpcodeTableGraph_CC;
       OpcodeTableUser1 = OpcodeTableUser1_CC;
+      break;
+    }
+    case InstructionSet::SG: {
+      OpcodeTableSystem = OpcodeTableSystem_SG;
+      OpcodeTableGraph = OpcodeTableGraph_SG;
+      OpcodeTableUser1 = OpcodeTableUser1_SG;
       break;
     }
     default: {

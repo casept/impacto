@@ -24,6 +24,7 @@ VmInstruction(InstTwipo);
 VmInstruction(InstTwipo_Dash);
 VmInstruction(InstDelusionTriggerCHLCC);
 VmInstruction(InstUnk103A);
+VmInstruction(InstUnk103FSteinsGate);
 
 }  // namespace Vm
 
