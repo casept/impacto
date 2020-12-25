@@ -19,6 +19,7 @@
 #include "opcodetables_cc.h"
 #include "opcodetables_sgps3.h"
 #include "opcodetables_chn.h"
+#include "opcodetables_sg.h"
 #include "../profile/game.h"
 #include "../profile/vm.h"
 #include "../profile/scriptinput.h"
@@ -123,6 +124,7 @@ void Init() {
       OpcodeTableUser1 = OpcodeTableUser1_CC;
       break;
     }
+
     case InstructionSet::SGPS3: {
       OpcodeTableSystem = OpcodeTableSystem_SGPS3;
       OpcodeTableGraph = OpcodeTableGraph_SGPS3;
@@ -141,6 +143,14 @@ void Init() {
       OpcodeTableUser1 = OpcodeTableUser1_CHN;
       break;
     }
+
+    case InstructionSet::SG: {
+      OpcodeTableSystem = OpcodeTableSystem_SG;
+      OpcodeTableGraph = OpcodeTableGraph_SG;
+      OpcodeTableUser1 = OpcodeTableUser1_SG;
+      break;
+    }
+
     default: {
       ImpLog(LL_Fatal, LC_VM, "Unsupported instruction set\n");
       Window::Shutdown();
