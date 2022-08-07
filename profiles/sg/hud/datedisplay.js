@@ -1,4 +1,4 @@
-var sheet = "Data01";
+var sheet = "Data";
 var name = "Date";
 
 var yearNumFirstX = 1525;
@@ -23,7 +23,7 @@ var weekHeight = 20;
 
 root.DateDisplay = {
 	Type: DateDisplayType.RNE,
-    YearNumSprites: [],
+	YearNumSprites: [],
     MonthNumSprites: [],
     DayNumSprites: [],
     WeekSprites: [],
