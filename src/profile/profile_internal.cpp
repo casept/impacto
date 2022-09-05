@@ -143,7 +143,7 @@ void EnsurePushMemberIteratorOfType(Value::ConstMemberIterator it, Type type) {
     nativeType result;                                                       \
     bool success = TryGet##typeName(result);                                 \
     if (!success) {                                                          \
-      ImpLog(LL_Fatal, LC_Profile, "Expected %s to be " typeDesc "\n");      \
+      ImpLog(LL_Fatal, LC_Profile, "Expected member to be " typeDesc "\n");  \
       Window::Shutdown();                                                    \
     }                                                                        \
     return result;                                                           \

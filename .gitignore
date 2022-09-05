@@ -270,6 +270,8 @@ __pycache__/
 *.pyc
 
 ###
-
+/games
+/.cache
 /CMakeSettings.json
 vendor/LibAtrac9
+/trace.txt

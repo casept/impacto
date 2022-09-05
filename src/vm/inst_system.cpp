@@ -301,6 +301,10 @@ VmInstruction(InstSystemMes) {
       break;
   }
 
+  if (UI::SysMesBoxPtr == nullptr) {
+    ImpLog(LogLevel::LL_Fatal, LC_VM,
+           "Game-specific code did not properly initialize UI::SysMesBoxPtr!");
+  }
   switch (mode) {
     case 0:  // SystemMesInit0
     case 1:  // SystemMesInit1

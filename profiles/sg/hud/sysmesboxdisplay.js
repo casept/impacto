@@ -1,42 +1,70 @@
-var sheet = "Data";
+// TODO: Check and fix
+
+var sheet = "Data01";
 var name = "SysMesBox";
 
 root.SysMesBoxDisplay = {
-	Type: SysMesBoxType.CHLCC,
+    Type: SysMesBoxType.Darling,
     DrawType: DrawComponentType.SystemMessage,
-	BoxX: 0,
-	BoxY: 230,
-	TextFontSize: 32,
-	TextMiddleY: 236,
-	TextX: 640,
-	TextLineHeight: 34,
-	TextMarginY: 14,
+    BoxX: 602,
+    BoxY: 224,
+    BoxMiddleBaseX: 604,
+    BoxMinimumWidth: 768,
+    BoxMiddleBaseWidth: 434,
+    BoxRightBaseWidth: 24,
+    BoxRightRemainPad: 48,
+    TextFontSize: 32,
+    TextMiddleY: 236,
+    TextX: 640,
+    TextLineHeight: 34,
+    TextMarginY: 14,
     ChoicePadding: 40,
     ChoiceY: 365,
     ChoiceXBase: 680,
     MinMaxMesWidth: 294,
-    MinHighlightWidth: 48,
-    HighlightBaseWidth: 144,
-    HighlightYOffset: 2,
-    HighlightXOffset: 11,
-    HighlightXBase: 658,
-    HighlightXStep: 132,
-    HighlightRightPartSpriteWidth: 24,
     AnimationSpeed: 55,
     FadeInDuration: 0.33,
     FadeOutDuration: 0.25
 };
 
-root.Sprites[name + "Box"] = {
+root.Sprites["SelectionHighlight"] = {
+    Sheet: sheet,
+    Bounds: { X: 65, Y: 33, Width: 94, Height: 30 }
+};
+root.SysMesBoxDisplay.SelectionHighlight = "SelectionHighlight";
+
+root.Sprites[name + "BoxPartLeft"] = {
     Sheet: sheet,
     Bounds: {
-        X: 767,
-        Y: 637,
-        Width: 1280,
-        Height: 172
+        X: 1,
+        Y: 842,
+        Width: 48,
+        Height: 182
     }
 };
-root.SysMesBoxDisplay.Box = name + "Box";
+root.SysMesBoxDisplay.BoxPartLeft = name + "BoxPartLeft";
+
+root.Sprites[name + "BoxPartRight"] = {
+    Sheet: sheet,
+    Bounds: {
+        X: 483,
+        Y: 842,
+        Width: 48,
+        Height: 182
+    }
+};
+root.SysMesBoxDisplay.BoxPartRight = name + "BoxPartRight";
+
+root.Sprites[name + "BoxPartMiddle"] = {
+    Sheet: sheet,
+    Bounds: {
+        X: 49,
+        Y: 842,
+        Width: 434,
+        Height: 182
+    }
+};
+root.SysMesBoxDisplay.BoxPartMiddle = name + "BoxPartMiddle";
 
 root.Sprites[name + "BoxDecoration"] = {
     Sheet: sheet,
@@ -48,36 +76,3 @@ root.Sprites[name + "BoxDecoration"] = {
     }
 };
 root.SysMesBoxDisplay.BoxDecoration = name + "BoxDecoration";
-
-root.Sprites[name + "SelectionLeftPart"] = {
-    Sheet: sheet,
-    Bounds: {
-        X: 502,
-        Y: 51,
-        Width: 144,
-        Height: 38
-    }
-};
-root.SysMesBoxDisplay.SelectionLeftPart = name + "SelectionLeftPart";
-
-root.Sprites[name + "SelectionRightPart"] = {
-    Sheet: sheet,
-    Bounds: {
-        X: 634,
-        Y: 51,
-        Width: 24,
-        Height: 38
-    }
-};
-root.SysMesBoxDisplay.SelectionRightPart = name + "SelectionRightPart";
-
-root.Sprites[name + "SelectionMiddlePart"] = {
-    Sheet: sheet,
-    Bounds: {
-        X: 515,
-        Y: 51,
-        Width: 132,
-        Height: 38
-    }
-};
-root.SysMesBoxDisplay.SelectionMiddlePart = name + "SelectionMiddlePart";

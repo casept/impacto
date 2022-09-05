@@ -13,7 +13,7 @@ root.LoadingDisplay = {
 
 MakeAnimation({
     Name: "ResourceLoadingBg",
-    Sheet: "Data",
+    Sheet: "Data01",
     FirstFrameX: 555,
     FirstFrameY: 544,
     FrameWidth: 206,
@@ -29,7 +29,7 @@ MakeAnimation({
 
 MakeAnimation({
     Name: "SaveLoadingBg",
-    Sheet: "Data",
+    Sheet: "Data01",
     FirstFrameX: 388,
     FirstFrameY: 0,
     FrameWidth: 277,
@@ -46,7 +46,7 @@ MakeAnimation({
 
 MakeAnimation({
     Name: "LoadingDisc",
-    Sheet: "Data",
+    Sheet: "Data01",
     FirstFrameX: 172,
     FirstFrameY: 1,
     FrameWidth: 60,
@@ -63,7 +63,7 @@ root.Animations["LoadingDisc"].Frames.push("LoadingDisc1");
 
 MakeAnimation({
     Name: "LoadingText",
-    Sheet: "Data",
+    Sheet: "Data01",
     FirstFrameX: 173,
     FirstFrameY: 91,
     FrameWidth: 214,

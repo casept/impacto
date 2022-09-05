@@ -1,13 +1,15 @@
 root.Sprites["ADVBox"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 767, Y: 806, Width: 1280, Height: 216 },
 };
 
 root.Sprites["DialogueWaitIcon"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 1, Y: 97, Width: 32, Height: 32 }
 };
 
+// NOTE: Values taken from sgps3
+// TODO: Check and fix
 root.Dialogue = {
     REVBounds: { X: 0, Y: 0, Width: 960, Height: 400 },
     REVNameFontSize: 24,

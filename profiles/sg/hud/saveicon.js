@@ -1,3 +1,5 @@
+// TODO: Check and fix
+
 root.SaveIcon = {
     ForegroundAnimation: "SaveIcon",
     DefaultPosition: { X: 1153, Y: 23 },
@@ -10,7 +12,7 @@ root.SaveIcon = {
 
 MakeAnimation({
     Name: "SaveIcon",
-    Sheet: "Data",
+    Sheet: "Data01",
     FirstFrameX: 1977,
     FirstFrameY: 1,
     FrameWidth: 70,
@@ -25,6 +27,6 @@ MakeAnimation({
 });
 
 root.Sprites["SaveIconBg"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 1439, Y: 1, Width: 84, Height: 84 }
 };
