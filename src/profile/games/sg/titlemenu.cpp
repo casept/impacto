@@ -6,24 +6,43 @@
 #include "../../ui/titlemenu.h"
 #include "../../../game.h"
 #include "../../../ui/ui.h"
-#include "../../../games/chlcc/titlemenu.h"
+#include "../../../games/sg/titlemenu.h"
 
 namespace Impacto {
 namespace Profile {
 namespace SG {
 namespace TitleMenu {
 
+// Background itself
 Sprite BackgroundSprite;
 float BackgroundX;
 float BackgroundY;
+
+// "Press Enter" blinking prompt
+float PressToStartX;
+float PressToStartY;
+float PressToStartAnimDurationIn;
+float PressToStartAnimDurationOut;
+float PressToStartAnimFastDurationIn;
+float PressToStartAnimFastDurationOut;
 
 void Configure() {
   BackgroundSprite = EnsureGetMemberSprite("BackgroundSprite");
   BackgroundX = EnsureGetMemberFloat("BackgroundX");
   BackgroundY = EnsureGetMemberFloat("BackgroundY");
 
-  UI::SG::TitleMenu* menu = new UI::SG::TitleMenu();
+  PressToStartX = EnsureGetMemberFloat("PressToStartX");
+  PressToStartY = EnsureGetMemberFloat("PressToStartY");
+  PressToStartAnimDurationIn =
+      EnsureGetMemberFloat("PressToStartAnimDurationIn");
+  PressToStartAnimDurationOut =
+      EnsureGetMemberFloat("PressToStartAnimDurationOut");
+  PressToStartAnimFastDurationIn =
+      EnsureGetMemberFloat("PressToStartAnimFastDurationIn");
+  PressToStartAnimFastDurationOut =
+      EnsureGetMemberFloat("PressToStartAnimFastDurationOut");
 
+  UI::SG::TitleMenu* menu = new UI::SG::TitleMenu();
   UI::TitleMenuPtr = menu;
 
   auto drawType = Game::DrawComponentType::_from_integral_unchecked(

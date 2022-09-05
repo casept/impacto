@@ -14,6 +14,9 @@ extern Sprite BackgroundSprite;
 extern float BackgroundX;
 extern float BackgroundY;
 
+extern float PressToStartAnimFastDurationIn;
+extern float PressToStartAnimFastDurationOut;
+
 // TODO: All the other sprites
 
 }  // namespace TitleMenu
