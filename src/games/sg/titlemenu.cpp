@@ -34,6 +34,14 @@ using namespace Impacto::Vm::Interface;
 TitleMenu::TitleMenu() {
   Sprite nullSprite = Sprite();
   nullSprite.Bounds = RectF(0.0f, 0.0f, 0.0f, 0.0f);
+  PressToStartAnimation = Animation();
+  PressToStartAnimation.DurationIn =
+      Profile::TitleMenu::PressToStartAnimDurationIn;
+  PressToStartAnimation.DurationOut =
+      Profile::TitleMenu::PressToStartAnimDurationOut;
+  PressToStartAnimation.LoopMode = ALM_ReverseDirection;
+  // TODO: Remove
+  PressToStartAnimation.StartIn();
 }
 
 void TitleMenu::Show() {
@@ -46,12 +54,15 @@ void TitleMenu::Show() {
     IsFocused = true;
     UI::FocusedMenu = this;
     AllowsScriptInput = true;
+    if (PressToStartAnimation.State == AS_Stopped) {
+      PressToStartAnimation.StartIn();
+    }
   }
 }
 void TitleMenu::Hide() {
   if (State != Hidden) {
     State = Hidden;
-    if (LastFocusedMenu != 0) {
+    if (LastFocusedMenu != nullptr) {
       UI::FocusedMenu = LastFocusedMenu;
       LastFocusedMenu->IsFocused = true;
     } else {
@@ -67,20 +78,49 @@ void TitleMenu::UpdateInput() { Menu::UpdateInput(); }
 void TitleMenu::Update(float dt) {
   UpdateInput();
 
+  PressToStartAnimation.Update(dt);
+
   if (GetFlag(SF_TITLEMODE)) {
     Show();
   } else {
     Hide();
   }
+
+  // These are copied from C;C, unsure if correct
+  if (State != Hidden && GetFlag(SF_TITLEMODE)) {
+    switch (ScrWork[SW_TITLEMODE]) {
+      case 1: {  // Press to start
+        PressToStartAnimation.DurationIn = PressToStartAnimDurationIn;
+        PressToStartAnimation.DurationOut = PressToStartAnimDurationOut;
+      } break;
+      case 2: {  // Transition between Press to start and menus
+        PressToStartAnimation.DurationIn = PressToStartAnimFastDurationIn;
+        PressToStartAnimation.DurationOut = PressToStartAnimFastDurationOut;
+      } break;
+      default: {
+        ImpLog(LL_Warning, LC_Render, "Unknown SW_TITLEMODE %i", SW_TITLEMODE);
+      } break;
+    }
+  }
 }
 
-void TitleMenu::Render() { DrawMainBackground(true); }
+void TitleMenu::Render() {
+  DrawMainBackground();
+  DrawStartButton();
+}
 
-inline void TitleMenu::DrawMainBackground(float opacity) {
+inline void TitleMenu::DrawMainBackground() {
   glm::vec4 col = glm::vec4(1.0f);
-  col.a = opacity;
+  col.a = 1.0f;
   Renderer2D::DrawSprite(BackgroundSprite, glm::vec2(BackgroundX, BackgroundY),
                          col);
+}
+
+inline void TitleMenu::DrawStartButton() {
+  glm::vec4 col = glm::vec4(1.0f);
+  col.a = glm::smoothstep(0.0f, 1.0f, PressToStartAnimation.Progress);
+  Renderer2D::DrawSprite(PressToStartSprite,
+                         glm::vec2(PressToStartX, PressToStartY), col);
 }
 
 }  // namespace SG

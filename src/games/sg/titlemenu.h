@@ -20,7 +20,10 @@ class TitleMenu : public Menu {
   void Render();
 
  private:
-  void DrawMainBackground(float opacity = 1.0f);
+  Animation PressToStartAnimation;
+
+  void DrawMainBackground();
+  void DrawStartButton();
 };
 
 }  // namespace SG
