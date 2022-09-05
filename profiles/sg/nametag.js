@@ -1,6 +1,6 @@
 include('common/nametag.js');
 MakeNameTag({
-    Sheet: "Data",
+    Sheet: "Data01",
     X: 768,
     Y: 787,
     LeftWidth: 195,

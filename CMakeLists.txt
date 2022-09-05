@@ -106,6 +106,10 @@ set(Impacto_Src
 
     src/profile/games/darling/sysmesbox.cpp
 
+    src/profile/games/sg/dialoguebox.cpp
+    src/profile/games/sg/titlemenu.cpp
+    src/profile/games/sg/sysmesbox.cpp
+
     src/games/rne/tilebackground.cpp
     src/games/rne/datedisplay.cpp
     src/games/rne/systemmenu.cpp
@@ -153,6 +157,10 @@ set(Impacto_Src
     src/games/mo6tw/tipsnotification.cpp
 
     src/games/darling/sysmesbox.cpp
+
+    src/games/sg/dialoguebox.cpp
+    src/games/sg/titlemenu.cpp
+    src/games/sg/sysmesbox.cpp
 
     src/hud/dialoguebox.cpp
     src/hud/datedisplay.cpp
@@ -378,6 +386,8 @@ set(Impacto_Header
 
     src/profile/games/darling/sysmesbox.h
 
+    src/profile/games/sg/sysmesbox.h
+
     src/games/rne/tilebackground.h
     src/games/rne/datedisplay.h
     src/games/rne/systemmenu.h
@@ -424,6 +434,8 @@ set(Impacto_Header
     src/games/mo6tw/tipsnotification.h
 
     src/games/darling/sysmesbox.h
+
+    src/games/sg/sysmesbox.h
 
     src/hud/dialoguebox.h
     src/hud/datedisplay.h

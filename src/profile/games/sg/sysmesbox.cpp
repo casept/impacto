@@ -1,26 +1,35 @@
 #include "sysmesbox.h"
 #include "../../profile_internal.h"
 
+#include "../../../ui/ui.h"
+#include "../../../games/sg/sysmesbox.h"
+#include "../../../game.h"
+
 namespace Impacto {
 namespace Profile {
-namespace Sg {
+namespace SG {
 namespace SysMesBox {
 
 Sprite BoxPartLeft;
 Sprite BoxPartRight;
 Sprite BoxPartMiddle;
 Sprite BoxDecoration;
+Sprite SelectionHighlight;
 
 float BoxX;
 float BoxY;
+float ChoicePadding;
+float ChoiceY;
+float ChoiceXBase;
+float MinMaxMesWidth;
 float BoxMinimumWidth;
 float BoxMiddleBaseX;
 float BoxMiddleBaseWidth;
 float BoxRightBaseWidth;
 float BoxRightRemainPad;
 
-Impacto::SysMesBox::SysMesBoxBase* Configure() {
-  Impacto::Sg::SysMesBox* result = new Impacto::Sg::SysMesBox();
+void Configure() {
+  SelectionHighlight = EnsureGetMemberSprite("SelectionHighlight");
 
   BoxPartLeft = EnsureGetMemberSprite("BoxPartLeft");
   BoxPartRight = EnsureGetMemberSprite("BoxPartRight");
@@ -29,16 +38,24 @@ Impacto::SysMesBox::SysMesBoxBase* Configure() {
 
   BoxX = EnsureGetMemberFloat("BoxX");
   BoxY = EnsureGetMemberFloat("BoxY");
+  ChoicePadding = EnsureGetMemberFloat("ChoicePadding");
+  ChoiceY = EnsureGetMemberFloat("ChoiceY");
+  ChoiceXBase = EnsureGetMemberFloat("ChoiceXBase");
+  MinMaxMesWidth = EnsureGetMemberFloat("MinMaxMesWidth");
   BoxMinimumWidth = EnsureGetMemberFloat("BoxMinimumWidth");
   BoxMiddleBaseX = EnsureGetMemberFloat("BoxMiddleBaseX");
   BoxMiddleBaseWidth = EnsureGetMemberFloat("BoxMiddleBaseWidth");
   BoxRightBaseWidth = EnsureGetMemberFloat("BoxRightBaseWidth");
   BoxRightRemainPad = EnsureGetMemberFloat("BoxRightRemainPad");
 
-  return result;
+  auto drawType = Game::DrawComponentType::_from_integral_unchecked(
+      EnsureGetMemberInt("DrawType"));
+
+  UI::SysMesBoxPtr = new UI::SG::SysMesBox();
+  UI::Menus[drawType].push_back(UI::SysMesBoxPtr);
 }
 
 }  // namespace SysMesBox
-}  // namespace Sg
+}  // namespace SG
 }  // namespace Profile
 }  // namespace Impacto

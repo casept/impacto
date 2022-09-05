@@ -7,6 +7,7 @@
 #include "../games/mo6tw/titlemenu.h"
 #include "../games/cc/titlemenu.h"
 #include "../games/cclcc/titlemenu.h"
+#include "../games/sg/titlemenu.h"
 #include "../../log.h"
 #include "../../window.h"
 
@@ -83,6 +84,8 @@ void Configure() {
       CC::TitleMenu::Configure();
     } else if (Type == +TitleMenuType::CCLCC) {
       CCLCC::TitleMenu::Configure();
+    } else if (Type == +TitleMenuType::SG) {
+      SG::TitleMenu::Configure();
     }
 
     // if (Implementation != 0) {

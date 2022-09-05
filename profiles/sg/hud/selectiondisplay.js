@@ -20,56 +20,56 @@ root.SelectionDisplay = {
 };
 
 root.Sprites["SelectionBackground"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 1, Y: 535, Width: 829, Height: 69 }
 };
 
 root.Sprites["PlainSelectionFrameTopLeft"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 0, Y: 0, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameTopSide"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 16, Y: 0, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameTopRight"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 32, Y: 0, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameLeftSide"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 0, Y: 16, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameBottomLeft"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 0, Y: 32, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameRightSide"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 32, Y: 16, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameBottomRight"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 32, Y: 32, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameBottomSide"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 16, Y: 32, Width: 16, Height: 16 }
 };
 
 root.Sprites["PlainSelectionFrameMiddle"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 16, Y: 16, Width: 16, Height: 16 }
 };
 
 root.Sprites["SelectionHighlight"] = {
-    Sheet: "Data",
+    Sheet: "Data01",
     Bounds: { X: 65, Y: 33, Width: 94, Height: 30 }
 };

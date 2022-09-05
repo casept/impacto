@@ -26,8 +26,17 @@ VmInstruction(InstUnk0052) {
 }
 VmInstruction(InstUnk0053) {
   StartInstruction;
-  PopExpression(arg1);
-  PopExpression(arg2);
+  PopUint8(arg1);
+  /*swich(type) {
+        case 2:
+                break;
+        case 3:
+                break;
+        default:
+
+  }*/
+  // Weird function pops off at least 1 from PC
+  PopUint8(arg2);
   ImpLogSlow(LL_Warning, LC_VMStub,
              "STUB instruction Unk0053(arg1: %i, arg2: %i)\n", arg1, arg2);
 }
@@ -775,8 +784,8 @@ VmInstruction(InstUnk103FSteinsGate) {
   switch (type) {
     // TODO: Cases 0x00 to 0x1A
     default: {
-          ImpLogSlow(LL_Warning, LC_VMStub, "STUB instruction Unk103FSteinsGate(type: %i)\n",
-                 type);
+      ImpLogSlow(LL_Warning, LC_VMStub,
+                 "STUB instruction Unk103FSteinsGate(type: %i)\n", type);
       break;
     }
   }
