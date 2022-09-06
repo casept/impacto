@@ -26,6 +26,16 @@ float PressToStartAnimDurationOut;
 float PressToStartAnimFastDurationIn;
 float PressToStartAnimFastDurationOut;
 
+// Main menu
+float MenuX;
+float MenuY;
+float MenuEntriesSpacingY;
+int MenuStartId;
+int MenuLoadId;
+int MenuExtraId;
+int MenuConfigId;
+int MenuHelpId;
+
 void Configure() {
   BackgroundSprite = EnsureGetMemberSprite("BackgroundSprite");
   BackgroundX = EnsureGetMemberFloat("BackgroundX");
@@ -41,6 +51,15 @@ void Configure() {
       EnsureGetMemberFloat("PressToStartAnimFastDurationIn");
   PressToStartAnimFastDurationOut =
       EnsureGetMemberFloat("PressToStartAnimFastDurationOut");
+
+  MenuX = EnsureGetMemberFloat("MenuX");
+  MenuY = EnsureGetMemberFloat("MenuY");
+  MenuEntriesSpacingY = EnsureGetMemberFloat("MenuEntriesSpacingY");
+  MenuStartId = EnsureGetMemberInt("MenuStartId");
+  MenuLoadId = EnsureGetMemberInt("MenuLoadId");
+  MenuExtraId = EnsureGetMemberInt("MenuExtraId");
+  MenuConfigId = EnsureGetMemberInt("MenuConfigId");
+  MenuHelpId = EnsureGetMemberInt("MenuHelpId");
 
   UI::SG::TitleMenu* menu = new UI::SG::TitleMenu();
   UI::TitleMenuPtr = menu;
