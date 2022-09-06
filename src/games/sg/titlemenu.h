@@ -4,6 +4,9 @@
 #include "../../ui/menu.h"
 #include "../../ui/widgets/group.h"
 #include "../../ui/widgets/button.h"
+#include "../../ui/widgets/sg/titlebutton.h"
+
+using Impacto::UI::Widgets::SG::TitleButton;
 
 namespace Impacto {
 namespace UI {
@@ -22,8 +25,17 @@ class TitleMenu : public Menu {
  private:
   Animation PressToStartAnimation;
 
+  Widgets::Group* MainItems;
+  TitleButton* Start;
+  TitleButton* Load;
+  TitleButton* Extra;
+  TitleButton* Config;
+  TitleButton* Help;
+
   void DrawMainBackground();
   void DrawStartButton();
+
+  void MenuButtonOnClick(Widgets::Button* target);
 };
 
 }  // namespace SG

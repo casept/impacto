@@ -17,6 +17,16 @@ extern float BackgroundY;
 extern float PressToStartAnimFastDurationIn;
 extern float PressToStartAnimFastDurationOut;
 
+extern float MenuX;
+extern float MenuY;
+extern float MenuEntriesSpacingY;
+
+extern int MenuStartId;
+extern int MenuLoadId;
+extern int MenuExtraId;
+extern int MenuConfigId;
+extern int MenuHelpId;
+
 // TODO: All the other sprites
 
 }  // namespace TitleMenu

@@ -199,6 +199,7 @@ set(Impacto_Src
     src/ui/widgets/rne/sysmenubutton.cpp
     src/ui/widgets/cc/titlebutton.cpp
     src/ui/widgets/cclcc/titlebutton.cpp
+    src/ui/widgets/sg/titlebutton.cpp
 
     src/nuklear_impl.cpp
     src/stbi_impl.c
