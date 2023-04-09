@@ -7,6 +7,7 @@
 #include "characterviewer.h"
 #include "log.h"
 #include "inputsystem.h"
+#include "vm/debugger/debugger.h"
 
 #include "ui/ui.h"
 
@@ -139,6 +140,10 @@ static void Init() {
   }
 
   Profile::ClearJsonProfile();
+
+#if IMPACTO_ENABLE_DEBUGGER
+  Vm::Dbg::Init();
+#endif
 }
 
 void InitFromProfile(std::string const& name) {
@@ -166,6 +171,10 @@ void Shutdown() {
   if (Profile::GameFeatures & GameFeature::Nuklear) {
     nk_sdl_shutdown();
   }
+
+#if IMPACTO_ENABLE_DEBUGGER
+  Vm::Dbg::Shutdown();
+#endif
 
   Window::Shutdown();
 }

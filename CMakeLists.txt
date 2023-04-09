@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
 project ("impacto")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
@@ -251,6 +254,8 @@ set(Impacto_Src
     src/vm/interface/scene3d.cpp
     src/vm/interface/scene2d.cpp
     src/vm/interface/input.cpp
+
+    src/vm/debugger/debugprotocol_target.cpp
 
     src/audio/audiosystem.cpp
     src/audio/audiochannel.cpp
@@ -522,6 +527,8 @@ set(Impacto_Header
     src/vm/interface/scene2d.h
     src/vm/interface/input.h
 
+    src/vm/debugger/debugprotocol_target.h
+
     src/audio/audiosystem.h
     src/audio/audiocommon.h
     src/audio/audiochannel.h
@@ -699,6 +706,8 @@ include_directories(${WebP_INCLUDE_DIRS})
 include_directories(vendor/include)
 include_directories(vendor/duktape/include)
 include_directories(vendor/pcg/include)
+include_directories(vendor/bitsery/include)
+include_directories(vendor/asio/asio/include)
 
 if (NOT DEFINED IMPACTO_DISABLE_MSPACK)
     list(APPEND Impacto_Src
@@ -719,7 +728,7 @@ target_link_libraries(impacto PUBLIC ${Impacto_Libs})
 
 # compiler/dependency configuration
 
-set_property(TARGET impacto PROPERTY CXX_STANDARD 14)
+set_property(TARGET impacto PROPERTY CXX_STANDARD 17)
 
 if(EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html")

@@ -1,5 +1,6 @@
 #include "vm.h"
 
+#include "debugger/debugger.h"
 #include "expression.h"
 #include "../log.h"
 #include "../io/vfs.h"
@@ -454,6 +455,14 @@ void RunThread(Sc3VmThread* thread) {
   uint32_t opcode;
   uint32_t opcodeGrp1;
   int calDummy;
+
+  // If breakpoint, wait for debugger to continue.
+  // Note that the debugger uses script-buffer relative addresses, so we need to
+  // convert the IP.
+  // TODO: Do we need to stop all threads?
+  // if (Dbg::IsBreakpoint(thread->ScriptBufferId, thread->Ip)) {
+  //  Dbg::BreakpointHit(thread->ScriptBufferId, thread->Ip);
+  //}
 
   ImpLog(LL_Trace, LC_VM, "Running thread ID = %i\n", thread->Id);
 
