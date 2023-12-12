@@ -76,6 +76,8 @@ const char* ChannelToString(LogChannel channel) {
       return "Profile";
     case LC_Video:
       return "Video";
+    case LC_VMDbg:
+      return "VMDbg";
     default:
       assert(false);
       return "";

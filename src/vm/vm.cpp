@@ -1,5 +1,6 @@
 #include "vm.h"
 
+#include "debugger/debugger.h"
 #include "expression.h"
 #include "../log.h"
 #include "../io/vfs.h"
@@ -445,6 +446,19 @@ void RunThread(Sc3VmThread* thread) {
   uint32_t opcode;
   uint32_t opcodeGrp1;
   int calDummy;
+
+  // If breakpoint, wait for debugger to continue.
+  // Note that the debugger uses script-buffer relative addresses, so we need to
+  // convert the IP.
+  // TODO: Do we need to stop all threads?
+  // TODO: Address has to be converted to script-buffer relative address.
+  const uint32_t addr = static_cast<uint32_t>((size_t)thread->Ip);
+  if (Dbg::IsBreakpoint(thread->ScriptBufferId, addr)) {
+    ImpLog(LL_Debug, LC_VMDbg,
+           "Breakpoint hit at script buffer offset %08X, thread ID = %i\n",
+           addr, thread->Id);
+    Dbg::BreakpointHit(thread->ScriptBufferId, addr);
+  }
 
   ImpLog(LL_Trace, LC_VM, "Running thread ID = %i\n", thread->Id);
 
