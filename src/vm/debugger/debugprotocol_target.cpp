@@ -6,6 +6,8 @@
 #include <bitsery/brief_syntax/vector.h>
 #include <netinet/tcp.h>
 
+#include "../../log.h"
+
 // Part of the ugly timeout hack
 #if defined(WIN32) || defined(_WIN32) || \
     defined(__WIN32) && !defined(__CYGWIN__)
@@ -21,6 +23,9 @@ extern "C" {
 #include <vector>
 #include <optional>
 #include <utility>
+#include <memory>
+#include <sstream>
+#include <iomanip>
 
 using namespace Impacto::Vm::Dbg::Proto::Cmd;
 
@@ -74,66 +79,94 @@ static uint16_t byteorder_ne_to_u16_be(uint16_t x) {
   return y;
 }
 
+static std::string buf_2_hexstr(const Buf& buf) {
+  std::string dbg_str{};
+  for (auto x : buf) {
+    std::ostringstream oss;
+    oss << "\\x" << std::hex << std::setw(2) << std::setfill('0')
+        << (unsigned)x;
+    dbg_str += oss.str();
+  }
+  return dbg_str;
+}
+
 Listener::Listener(uint16_t port)
     : ctx({}), acceptor(ctx, tcp::endpoint(tcp::v6(), port)) {
   // Because the boost API makes it impossible to sanely listen on separate v4
   // and v6 acceptors
-  asio::ip::v6_only option(false);
-  acceptor.set_option(option);
+  // FIXME: Apparently this is an unsupported option?
+  // asio::ip::v6_only option(false);
+  // acceptor.set_option(option);
+
   acceptor.listen();
 };
 
-Connection Listener::GetConnection() {
+std::shared_ptr<Connection> Listener::GetConnection() {
   tcp::socket sock(ctx);
   acceptor.accept(sock);
-  return Connection(std::move(sock));
+  return std::make_shared<Connection>(std::move(sock));
 }
 
-Connection::Connection(tcp::socket sock) : ctx({}), sock(ctx), recvBuf({}) {
+Connection::Connection(tcp::socket sock)
+    : m_ctx({}), m_sock(std::move(sock)), m_recvBuf({}) {
   // This assumes an asio implementation detail by dealing with raw underlying
   // OS sockets, because apparently it's acceptable for "mature" C++ libraries
   // to lack basic features.
   const int timeoutMs = 1000;
-  ::setsockopt(sock.native_handle(), SOL_SOCKET, SO_RCVTIMEO,
+  ::setsockopt(m_sock.native_handle(), SOL_SOCKET, SO_RCVTIMEO,
                (const char*)&timeoutMs, sizeof timeoutMs);
-  ::setsockopt(sock.native_handle(), SOL_SOCKET, SO_SNDTIMEO,
+  ::setsockopt(m_sock.native_handle(), SOL_SOCKET, SO_SNDTIMEO,
                (const char*)&timeoutMs, sizeof timeoutMs);
   // Reduce latency
   const int one = 1;
-  ::setsockopt(sock.native_handle(), SOL_TCP, TCP_NODELAY, &one, sizeof one);
+  ::setsockopt(m_sock.native_handle(), SOL_TCP, TCP_NODELAY, &one, sizeof one);
   asio::socket_base::send_buffer_size bufsize(32);
-  sock.set_option(bufsize);
+  m_sock.set_option(bufsize);
 }
 
 void Connection::SendReply(const Reply::Reply& reply) {
-  Buf buf{};
-  const size_t sz = bitsery::quickSerialization<OutputAdapter>(buf, reply);
+  Buf payload{};
+  const size_t sz = bitsery::quickSerialization<OutputAdapter>(payload, reply);
   // Prepend size
   if (sz > UINT16_MAX) {
     throw std::runtime_error(
         "Connection::SendReply() failed: Message too large");
   }
+  Buf buf{};
+  buf.reserve(2 + sz);
   const uint16_t sz_u16_be = byteorder_ne_to_u16_be(sz);
   buf.insert(buf.begin(), sz_u16_be & 0x00FF);
-  buf.insert(buf.begin(), (sz_u16_be & 0xFF00) >> 8);
+  buf.insert(buf.begin() + 1, (sz_u16_be & 0xFF00) >> 8);
+  buf.insert(buf.end(), payload.begin(), payload.begin() + sz);
 
-  asio::write(sock, asio::buffer(buf));
+  ImpLog(LL_Trace, LC_VMDbg, "Sending debug protocol reply: %s\n",
+         buf_2_hexstr(buf).c_str());
+  size_t transferred = asio::write(m_sock, asio::buffer(buf));
+  if (transferred != buf.size()) {
+    ImpLog(LL_Warning, LC_VMDbg,
+           "Failed to transfer all data to debugger! Wanted to send %zu bytes, "
+           "sent %zu\n",
+           buf.size(), transferred);
+  }
 }
 
 std::optional<Cmd::Cmd> Connection::RecvCmd() {
   // peek is discouraged, so read all bytes into our buffer first
-  if (sock.available() > 0) {
-    sock.read_some(asio::buffer(recvBuf));
+  const size_t avail = m_sock.available();
+  if (avail > 0) {
+    m_recvBuf.resize(m_recvBuf.size() + avail);
+    m_sock.read_some(asio::buffer(m_recvBuf));
   }
+
   // Do we at least know the message size?
-  if (recvBuf.size() >= 2) {
+  if (m_recvBuf.size() >= 2) {
     // Yes - is the entire message available?
-    const uint16_t sz_u16 = byteorder_be_to_u16_native(recvBuf.data());
+    const uint16_t sz_u16 = byteorder_be_to_u16_native(m_recvBuf.data());
     const size_t sz = static_cast<size_t>(sz_u16);
-    if ((recvBuf.size() - 2) >= sz) {
+    if ((m_recvBuf.size() - 2) >= sz) {
       Cmd::Cmd cmd{};
-      bitsery::quickDeserialization<InputAdapter>({recvBuf.begin(), sz}, cmd);
-      recvBuf.erase(recvBuf.begin(), recvBuf.begin() + 2 + sz);
+      bitsery::quickDeserialization<InputAdapter>({m_recvBuf.begin(), sz}, cmd);
+      m_recvBuf.erase(m_recvBuf.begin(), m_recvBuf.begin() + 2 + sz);
       return {cmd};
     }
   }

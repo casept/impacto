@@ -187,6 +187,11 @@ void Init() {
   ScrWork[2200] = 1;  // Global animation multiplier maybe?... Set in GameInit()
   // SetFlag(SF_MESALLSKIP,
   //        1);  // Force skip mode for now
+
+  // Start debug server
+  ImpLog(LL_Info, LC_VM, "Waiting for debugger client to attach...\n");
+  Dbg::Init();
+  ImpLog(LL_Info, LC_VM, "Debugger client attached, continuing...\n");
 }
 
 bool LoadScript(uint32_t bufferId, uint32_t scriptId) {

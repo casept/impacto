@@ -6,6 +6,10 @@
 #include <thread>
 #include <unordered_set>
 #include <utility>
+#include <chrono>
+#include <memory>
+
+using namespace std::chrono_literals;
 
 #include "../../log.h"
 #include "debugprotocol_target.h"
@@ -34,27 +38,30 @@ static std::unordered_set<std::pair<uint8_t, uint32_t>, pair_hash>
     breakpoints{};
 
 void Init() {
-  // Async would be a pain, so just do it in a thread
-  t.emplace([]() {
-    // Initialize
-    ImpLog(LL_Debug, LC_VMDbg, "Starting thread\n");
-    conn.reset();
-    listen.reset();
-    listen.emplace(LISTEN_PORT);
-    ImpLog(LL_Debug, LC_VMDbg, "Waiting for client...\n");
-    // TODO: Emplace
-    auto c = listen.value().GetConnection();
-    ImpLog(LL_Debug, LC_VMDbg, "Debugger client connected\n");
+  // Block until client connects
+  conn.reset();
+  listen.reset();
+  listen.emplace(LISTEN_PORT);
+  ImpLog(LL_Debug, LC_VMDbg, "Waiting for client...\n");
+  // Has to be shared_ptr because C++ lambda moves are broken garbage
+  auto c = listen.value().GetConnection();
+  ImpLog(LL_Debug, LC_VMDbg, "Debugger client connected\n");
 
-    // Handle requests
+  // Async would be a pain, so just do it in a thread
+  auto lambda = [c]() mutable {
+    ImpLog(LL_Debug, LC_VMDbg, "Starting debugger thread\n");
+
+    // Start handling requests
     while (true) {
+      std::this_thread::sleep_for(100ms);
       // Quit if we're shutting down
       if (shutdown) {
         ImpLog(LL_Debug, LC_VMDbg, "Shutting down debugger thread\n");
         return;
       }
 
-      auto cmd = c.RecvCmd();
+      // Otherwise, handle commands, if any
+      auto cmd = c->RecvCmd();
       if (cmd.has_value()) {
         ImpLog(LL_Trace, LC_VMDbg, "Got request\n");
         switch (cmd.value().type) {
@@ -66,13 +73,29 @@ void Init() {
             // TODO: Actually set breakpoint
             break;
           }
+          case Cmd::Type::GetThreads: {
+            ImpLog(LL_Debug, LC_VMDbg, "Get thread list\n");
+            // TODO: Get thread list
+            // Send empty list for now
+            std::map<std::string, std::vector<ThreadID>> threads = {};
+            const auto reply = Reply::Reply{
+                .type = Reply::Type::GetThreads,
+                .reply = {Reply::GetThreads{.threads = threads}},
+            };
+            c->SendReply(reply);
+            ImpLog(LL_Warning, LC_VMDbg, "Sent empty thread list (stub)\n");
+            break;
+          }
+
           default: {
             ImpLog(LL_Warning, LC_VMDbg, "Unknown request\n");
+            break;
           }
         }
       }
     }
-  });
+  };
+  t.emplace(std::move(lambda));
 }
 
 bool IsBreakpoint(uint8_t script_buf, uint32_t addr) {
