@@ -5,7 +5,9 @@
 #include "characterviewer.h"
 #include "log.h"
 #include "inputsystem.h"
+#ifndef IMPACTO_DISABLE_DEBUGGER
 #include "vm/debugger/debugger.h"
+#endif
 
 #include "ui/ui.h"
 
@@ -131,7 +133,7 @@ static void Init() {
 
   Profile::ClearProfile();
 
-#if IMPACTO_ENABLE_DEBUGGER
+#ifndef IMPACTO_DISABLE_DEBUGGER
   Vm::Dbg::Init();
 #endif
 }
@@ -161,7 +163,7 @@ void Shutdown() {
     Renderer->Shutdown();
   }
 
-#if IMPACTO_ENABLE_DEBUGGER
+#ifndef IMPACTO_DISABLE_DEBUGGER
   Vm::Dbg::Shutdown();
 #endif
 

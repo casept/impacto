@@ -13,7 +13,7 @@ using namespace std::chrono_literals;
 
 #include "../../log.h"
 #include "debugprotocol_target.h"
-#include "debugprotocol.h"
+#include "debugprotocol.pb.h"
 
 using namespace Impacto::Vm::Dbg::Proto::Impl;
 using namespace Impacto::Vm::Dbg::Proto;
@@ -64,31 +64,15 @@ void Init() {
       auto cmd = c->RecvCmd();
       if (cmd.has_value()) {
         ImpLog(LL_Trace, LC_VMDbg, "Got request\n");
-        switch (cmd.value().type) {
-          case Cmd::Type::SetBreakpoint: {
-            auto bp_cmd = std::get<Cmd::SetBreakpoint>(cmd.value().cmd);
-            ImpLog(LL_Debug, LC_VMDbg,
-                   "Set breakpoint at address %ul in thread %ul\n", bp_cmd.addr,
-                   bp_cmd.tid);
-            // TODO: Actually set breakpoint
-            break;
-          }
-          case Cmd::Type::GetThreads: {
-            ImpLog(LL_Debug, LC_VMDbg, "Get thread list\n");
-            // TODO: Get thread list
-            // Send empty list for now
-            std::map<std::string, std::vector<ThreadID>> threads = {};
-            const auto reply = Reply::Reply{
-                .type = Reply::Type::GetThreads,
-                .reply = {Reply::GetThreads{.threads = threads}},
-            };
-            c->SendReply(reply);
-            ImpLog(LL_Warning, LC_VMDbg, "Sent empty thread list (stub)\n");
+        switch (cmd.value().type()) {
+          case SC3Debug::REQUEST_TYPE_GET_STATE: {
+            ImpLog(LL_Debug, LC_VMDbg, "Debugger requested VM state\n");
+            // TODO: Process and return state
             break;
           }
 
           default: {
-            ImpLog(LL_Warning, LC_VMDbg, "Unknown request\n");
+            ImpLog(LL_Warning, LC_VMDbg, "Unknown or unimplemented request\n");
             break;
           }
         }
@@ -107,13 +91,9 @@ static void NotifyBreakpointHit(uint8_t script_buf, uint32_t addr) {
     ImpLog(LL_Debug, LC_VMDbg, "No debugger client connected\n");
     return;
   }
-  ImpLog(LL_Debug, LC_VMDbg, "Sending breakpoint hit notification\n");
-  Reply::Reply r = {
-      .type = Reply::Type::BreakpointHit,
-      .reply = {Reply::BreakpointHit{.tid = script_buf, .addr = addr}},
-  };
-  // TODO: Send in thread
-  conn.value().SendReply(r);
+  ImpLog(LL_Debug, LC_VMDbg,
+         "Sending breakpoint hit notification not yet implemented\n");
+  // TODO: Implement
 }
 
 void BreakpointHit(uint8_t script_buf, uint32_t addr) {

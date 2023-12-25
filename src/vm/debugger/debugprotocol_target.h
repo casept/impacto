@@ -1,6 +1,6 @@
 #pragma once
 
-#include "debugprotocol.h"
+#include "debugprotocol.pb.h"
 
 #include <asio.hpp>
 
@@ -18,9 +18,9 @@ class Connection {
   Connection() = delete;
   explicit Connection(asio::ip::tcp::socket sock);
   /// Read a command from debugger, if available. Non-blocking.
-  std::optional<Cmd::Cmd> RecvCmd();
+  std::optional<SC3Debug::Request> RecvCmd();
   /// Send a reply to debugger. Blocks until send completes.
-  void SendReply(const Reply::Reply& reply);
+  void SendReply(const SC3Debug::Reply& reply);
 
  private:
   asio::io_context m_ctx;

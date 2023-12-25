@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package SC3Debug;
+
+
+enum RequestType {
+    // Get the state of the entire VM.
+    REQUEST_TYPE_GET_STATE = 0;
+    // Break execution as soon as this is processed.
+    REQUEST_TYPE_BREAK_NOW = 1;
+    // Set a breakpoint. Target will reply when hit.
+    REQUEST_TYPE_SET_BREAKPOINT = 2;
+    // Continue execution. Target will not send a reply.
+    REQUEST_TYPE_CONTINUE = 3;
+    // Unset a breakpoint.
+    REQUEST_TYPE_UNSET_BREAKPOINT = 4;
+    // TODO: Get mapping of script buffers to their scripts.
+    // TYPE_GET_BUF_2_SCRIPT_MAPPING = 5,
+    // TODO: Get mapping of script buffers to their threads.
+    // TYPE_GET_BUF_2_THREAD_MAPPING = 6,
+    // TODO: Set a watchpoint on a local variable. Target will reply when hit.
+    // TYPE_SET_LOCAL_VAR_WATCHPOINT = 7,
+    // TODO: Set a watchpoint on a global variable. Target will reply when hit.
+    // TYPE_SET_GLOBAL_VAR_WATCHPOINT = 8,
+    // TODO: Set a watchpoint on a global flag. Target will reply when hit.
+    // TYPE_SET_GLOBAL_FLAG_WATCHPOINT = 9,
+}
+
+message Request {
+    RequestType type = 1;
+
+    // Messages not defined below have no body, processing the type field is sufficient to interpret them.
+
+    message SetBreakpoint {
+        uint32 tid = 1;
+        uint32 addr = 2;
+    }
+
+    message UnsetBreakpoint {
+        uint32 tid = 1;
+        uint32 addr = 2;
+    }
+
+    optional SetBreakpoint set_breakpoint = 2;
+    optional UnsetBreakpoint unset_breakpoint = 3;
+}
+
+enum ReplyType {
+    // VM state is provided, whether in response to a request or for other reasons.
+    REPLY_TYPE_VM_STATE = 0;
+    // Breakpoint was hit.
+    REPLY_TYPE_BREAKPOINT_HIT = 1;
+}
+
+message VMState {
+    message ReturnAddr {
+        // ID of the return offset within the script buffer to return to.
+        uint32 return_offset_id = 1;
+        // ID of the script buffer to return to.
+        uint32 script_buf_id = 2;
+    }
+
+    message ThreadCallStack {
+        // How deep the call stack goes (max. 8)
+        uint32 depth = 1;
+        repeated ReturnAddr return_addr = 2;
+    }
+
+    message ThreadState {
+        // The ID of the script buffer containing the currently loaded script.
+        uint32 script_buf = 1;
+        // The name of the script currently loaded in this script buffer.
+        string script_name = 2;
+        // Pointer to the next instruction to be executed.
+        uint32 ip = 3;
+        // Thread-local variables (always 32 exactly).
+        repeated uint32 tlv = 4;
+        // The current call stack.
+        ThreadCallStack call_stack = 5;
+    }
+
+    repeated ThreadState threads = 1;
+}
+
+message Reply {
+    ReplyType type = 1;
+
+    // Messages not defined below have no body, processing the type field is sufficient to interpret them.
+
+    message State {
+        VMState vm_state = 1;
+    }
+
+    message BreakpointHit {
+        uint32 script_buf_id = 1;
+        uint32 ip = 2;
+    }
+
+    optional State state = 2;
+    optional BreakpointHit breakpoint_hit = 3;
+}

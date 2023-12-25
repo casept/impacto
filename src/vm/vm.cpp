@@ -1,6 +1,8 @@
 #include "vm.h"
 
+#ifndef IMPACTO_DISABLE_DEBUGGER
 #include "debugger/debugger.h"
+#endif
 #include "expression.h"
 #include "../log.h"
 #include "../io/vfs.h"
@@ -188,10 +190,11 @@ void Init() {
   // SetFlag(SF_MESALLSKIP,
   //        1);  // Force skip mode for now
 
-  // Start debug server
+#ifndef IMPACTO_DISABLE_DEBUGGER
   ImpLog(LL_Info, LC_VM, "Waiting for debugger client to attach...\n");
   Dbg::Init();
   ImpLog(LL_Info, LC_VM, "Debugger client attached, continuing...\n");
+#endif
 }
 
 bool LoadScript(uint32_t bufferId, uint32_t scriptId) {
@@ -452,6 +455,7 @@ void RunThread(Sc3VmThread* thread) {
   uint32_t opcodeGrp1;
   int calDummy;
 
+#ifndef IMPACTO_DISABLE_DEBUGGER
   // If breakpoint, wait for debugger to continue.
   // Note that the debugger uses script-buffer relative addresses, so we need to
   // convert the IP.
@@ -464,6 +468,7 @@ void RunThread(Sc3VmThread* thread) {
            addr, thread->Id);
     Dbg::BreakpointHit(thread->ScriptBufferId, addr);
   }
+#endif
 
   ImpLog(LL_Trace, LC_VM, "Running thread ID = %i\n", thread->Id);
 
