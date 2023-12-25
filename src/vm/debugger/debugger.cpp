@@ -14,6 +14,7 @@ using namespace std::chrono_literals;
 #include "../../log.h"
 #include "debugprotocol_target.h"
 #include "debugprotocol.pb.h"
+#include "serialize_vm.h"
 
 using namespace Impacto::Vm::Dbg::Proto::Impl;
 using namespace Impacto::Vm::Dbg::Proto;
@@ -67,7 +68,19 @@ void Init() {
         switch (cmd.value().type()) {
           case SC3Debug::REQUEST_TYPE_GET_STATE: {
             ImpLog(LL_Debug, LC_VMDbg, "Debugger requested VM state\n");
-            // TODO: Process and return state
+            // FIXME: Stop VM thread processing first to prevent
+            // inconsistent state being reported
+            auto state = serializeVMState();
+            // Protobuf expects to be able to free() the message passed to
+            // set_allocated_vm_state, and it seems there's no better API
+            SC3Debug::VMState* heapState = new SC3Debug::VMState();
+            heapState->CopyFrom(state);
+            ImpLog(LL_Trace, LC_VMDbg, "Serialized VM state:\n %s\n",
+                   state.DebugString().c_str());
+            SC3Debug::Reply reply{};
+            reply.set_type(SC3Debug::REPLY_TYPE_VM_STATE);
+            reply.mutable_state()->set_allocated_vm_state(heapState);
+            c->SendReply(reply);
             break;
           }
 

@@ -867,10 +867,12 @@ if (NOT DEFINED IMPACTO_DISABLE_DEBUGGER)
         src/vm/debugger/debugger.cpp
         src/vm/debugger/debugprotocol.proto
         src/vm/debugger/debugprotocol_target.cpp
+        src/vm/debugger/serialize_vm.cpp
     )
     list (APPEND Impacto_Header
         src/vm/debugger/debugger.h
         src/vm/debugger/debugprotocol_target.h
+        src/vm/debugger/serialize_vm.h
     )
 
     find_package(Protobuf REQUIRED)

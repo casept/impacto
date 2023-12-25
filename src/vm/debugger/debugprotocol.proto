@@ -54,8 +54,8 @@ enum ReplyType {
 
 message VMState {
     message ReturnAddr {
-        // ID of the return offset within the script buffer to return to.
-        uint32 return_offset_id = 1;
+        // Offset within the script buffer to return to.
+        uint32 return_offset = 1;
         // ID of the script buffer to return to.
         uint32 script_buf_id = 2;
     }
@@ -67,19 +67,28 @@ message VMState {
     }
 
     message ThreadState {
-        // The ID of the script buffer containing the currently loaded script.
-        uint32 script_buf = 1;
-        // The name of the script currently loaded in this script buffer.
-        string script_name = 2;
-        // Pointer to the next instruction to be executed.
-        uint32 ip = 3;
-        // Thread-local variables (always 32 exactly).
-        repeated uint32 tlv = 4;
-        // The current call stack.
-        ThreadCallStack call_stack = 5;
+        uint32 tid = 1;
+        uint32 flags = 2;
+        uint32 exec_priority = 3;
+        uint32 script_buf = 4;
+        string script_name = 5;
+        uint32 group_id = 6;
+        uint32 wait_counter = 7;
+        uint32 script_param = 8;
+        uint32 ip = 9; // Instruction pointer relative to start of script buffer
+        uint32 loop_counter = 10;
+        uint32 loop_label = 11;
+        ThreadCallStack call_stack = 12;
+        uint32 draw_prio = 13;
+        uint32 draw_type = 14; // TODO: Enum
+        uint32 alpha = 15;
+        uint32 temp_1 = 16;
+        uint32 temp_2 = 17;
+        repeated uint32 tlv = 18; // Thread-local variables (exactly 32)
+        uint32 dialogue_page_id = 19;
     }
 
-    repeated ThreadState threads = 1;
+    repeated ThreadState thread = 1;
 }
 
 message Reply {
