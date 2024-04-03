@@ -766,7 +766,7 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${WebP_INCLUDE_DIRS})
 include_directories(vendor/include)
 include_directories(vendor/pcg/include)
-include_directories(vendor/asio/asio/include)
+include_directories(vendor/asio/include)
 
 if (NOT DEFINED IMPACTO_DISABLE_OPENGL)
     list(APPEND Impacto_Src
@@ -857,12 +857,9 @@ if (NOT DEFINED IMPACTO_DISABLE_VULKAN)
     include_directories(${Vulkan_INCLUDE_DIRS})
 endif ()
 
-<<<<<<< HEAD
-if (NOT DEFINED IMPACTO_DISABLE_DX9)
-||||||| parent of 3d67945 (Switch to protobuf for debugger protocol (WIP))
-if (DEFINED IMPACTO_ENABLE_DX9)
-=======
-if (NOT DEFINED IMPACTO_DISABLE_DEBUGGER)
+if (DEFINED IMPACTO_ENABLE_DEBUGGER)
+    message(STATUS "Enabling debugger support")
+
     list(APPEND Impacto_Src
         src/vm/debugger/debugger.cpp
         src/vm/debugger/debugprotocol.proto
@@ -877,15 +874,13 @@ if (NOT DEFINED IMPACTO_DISABLE_DEBUGGER)
 
     find_package(Protobuf REQUIRED)
     list(APPEND Impacto_Libs protobuf::libprotobuf)
-endif ()
-
-if (IMPACTO_DISABLE_DEBUGGER)
+else ()
+    message(STATUS "NOT enabling debugger support")
     add_definitions(-DIMPACTO_DISABLE_DEBUGGER)
 endif ()
 
 
-if (DEFINED IMPACTO_ENABLE_DX9)
->>>>>>> 3d67945 (Switch to protobuf for debugger protocol (WIP))
+if (NOT DEFINED IMPACTO_DISABLE_DX9)
     list(APPEND Impacto_Src
             src/renderer/dx9/utils.cpp
             src/renderer/dx9/renderer.cpp
@@ -969,7 +964,7 @@ configure_file(src/config.h.in ${PROJECT_BINARY_DIR}/include/config.h)
 target_include_directories(impacto PRIVATE ${PROJECT_BINARY_DIR}/include)
 
 # Has to be done here as target is required to exist
-if (NOT DEFINED IMPACTO_DISABLE_DEBUGGER)
+if (DEFINED IMPACTO_ENABLE_DEBUGGER)
     protobuf_generate(TARGET impacto LANGUAGE cpp)
     target_include_directories(impacto PRIVATE ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/src/vm/debugger)
     # protobuf is a bit broken, see
